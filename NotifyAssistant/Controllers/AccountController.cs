@@ -147,6 +147,7 @@ namespace NotifyAssistant.Controllers
                         }
 
                         user.LineLoginAccessToken = null;
+                        user.LineLoginIdToken = null;
                         await _db.SaveChangesAsync();
                     }
                 }

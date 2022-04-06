@@ -125,6 +125,9 @@ namespace NotifyAssistant.Controllers
                         return BadRequest("Error occurred on revoke endpoint");
                     }
                 }
+
+                user.LineNotifyAccessToken = null;
+                await _db.SaveChangesAsync();
             }
             
             return Ok();
