@@ -1,0 +1,29 @@
+﻿@model object
+
+<div>
+    <div class="text-center">
+        <h1 class="display-4 mt-5 mb-3">登入</h1>
+        <p>請點擊以下按鈕登入</p>
+        <div class="mb-3">
+            <button class="btn btn-success btn-lg" id="LineLoginBtn">Login with LINE</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_AxiosScriptsPartial"); }
+    <script>
+        const lineLoginBtn = document.getElementById("LineLoginBtn");
+        lineLoginBtn.onclick = () => {
+            lineLoginBtn.disabled = true;
+            window.axios.get("@Url.Action("LineLogin")")
+                .then(response => {
+                    window.location.href = response.data.redirectUrl;
+                })
+                .catch(error => {
+                    alert("系統忙碌中，請稍後再試！");
+                    lineLoginBtn.disabled = false;
+                });
+        };
+    </script>
+}

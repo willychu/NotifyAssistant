@@ -1,0 +1,44 @@
+﻿@model NotifyAssistant.Models.Entity.User
+
+<div>
+    <h1>個人資訊</h1>
+    
+    <div class="mt-3 mb-3 text-center">
+        <div class="mb-2">
+            <img src="@Model.AvatarUrl" class="rounded-circle" width="250" />
+        </div>
+        <div class="mb-2">
+            <span class="fs-2 fs-bold">@Model.Nickname</span>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label class="col-sm-2 col-form-label">用戶識別碼</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" value="@Model.UserId" disabled="disabled">
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label class="col-sm-2 col-form-label">角色</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" value="@Model.Role" disabled="disabled">
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label class="col-sm-2 col-form-label">LINE Login Access Token</label>
+        <div class="col-sm-10">
+            <textarea class="form-control text-break-all" rows="3" disabled="disabled">@Model.LineLoginAccessToken</textarea>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label class="col-sm-2 col-form-label">LINE Login ID Token</label>
+        <div class="col-sm-10">
+            <textarea class="form-control text-break-all" rows="3" disabled="disabled">@Model.LineLoginIdToken</textarea>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label class="col-sm-2 col-form-label">LINE Notify Access Token</label>
+        <div class="col-sm-10">
+            <textarea class="form-control text-break-all" rows="3" disabled="disabled">@Model.LineNotifyAccessToken</textarea>
+        </div>
+    </div>
+</div>

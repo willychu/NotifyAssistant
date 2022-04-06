@@ -16,3 +16,11 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.field-validation-error {
+    color: red;
+}
+
+.text-break-all {
+  word-break: break-all;
+}

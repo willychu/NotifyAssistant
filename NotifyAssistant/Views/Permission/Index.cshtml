@@ -1,0 +1,36 @@
+﻿<div>
+    <h1>特別區域</h1>
+
+    <div>
+        <p><button class="btn btn-info" id="GetPermissionBtn">成為管理員</button></p>
+        <p><button class="btn btn-info" id="CancelPermissionBtn">退出管理員</button></p>
+        <p>注意：以上功能皆在重新登入後生效！</p>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_AxiosScriptsPartial"); }
+    <script>
+        const getPermissionBtn = document.getElementById("GetPermissionBtn");
+        const cancelPermissionBtn = document.getElementById("CancelPermissionBtn");
+        
+        getPermissionBtn.onclick = async () => {
+            window.axios.post("@Url.Action("GetPermission")")
+                .then(response => {
+                    alert("已獲得管理員權限，請重新登入！");
+                })
+                .catch(error => {
+                    alert("系統忙碌中，請稍後再試！");
+                });
+        };
+        cancelPermissionBtn.onclick = async () => {
+            window.axios.post("@Url.Action("CancelPermission")")
+                .then(response => {
+                    alert("已取消管理員權限，請重新登入！");
+                })
+                .catch(error => {
+                    alert("系統忙碌中，請稍後再試！");
+                });
+        };
+    </script>
+}

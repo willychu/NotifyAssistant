@@ -1,0 +1,44 @@
+﻿@model NotifyAssistant.Models.LineNotify.NotifyContentViewModel
+
+<div>
+    <h1>發送訊息</h1>
+
+    <div class="mt-4">
+        <form method="post" asp-controller="Admin" asp-action="NotifyAll">
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label" for="NotifyContent">訊息內容</label>
+                <div class="col-sm-10">
+                    <textarea class="form-control" id="NotifyContent" asp-for="NotifyContent" rows="3" data-val-required="請輸入文字" data-val-maxlength="文字字數超出限制，請刪減文字"></textarea>
+                    <span asp-validation-for="NotifyContent"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                    <input type="checkbox" class="form-check-input" id="NotifySilent" asp-for="NotifySilent" />
+                    <label class="form-label" for="NotifySilent">無聲訊息</label>
+                    <span asp-validation-for="NotifySilent"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                    <button type="submit" class="btn btn-primary">送出</button>
+                    <button type="reset" class="btn btn-outline-secondary">重設</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+        var settings = {
+            validClass: "is-valid",
+            errorClass: "is-invalid"
+        }; 
+        $.validator.setDefaults(settings);
+        $.validator.unobtrusive.options = settings;
+    </script>
+}

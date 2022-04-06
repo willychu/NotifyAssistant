@@ -1,0 +1,57 @@
+﻿<div>
+    <h1>管理訂閱</h1>
+    
+    <div>
+        @if (ViewBag.IsSubscribe == true)
+        {
+            <p>狀態：<span class="text-success fw-bold">您已成功訂閱！</span></p>
+            <p><button class="btn btn-outline-danger" id="UnsubscribeBtn">取消訂閱</button></p>
+            <p>您也可以前往 <a href="https://notify-bot.line.me/my/" target="_blank">LINE Notify 網站</a>取消訂閱</p>
+        }
+        else
+        {
+            <p>狀態：<span class="text-danger fw-bold">您目前尚未訂閱！</span></p>
+            <p><button class="btn btn-primary" id="SubscribeBtn">訂閱</button></p>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_AxiosScriptsPartial"); }
+    <script>
+        @if (ViewBag.IsSubscribe == true)
+        {
+            <text>
+                const unsubscribeBtn = document.getElementById("UnsubscribeBtn");
+                unsubscribeBtn.onclick = () => {
+                    unsubscribeBtn.disabled = true;
+                    window.axios.post("@Url.Action("Unsubscribe")")
+                        .then(response => {
+                            window.location.reload();
+                        })
+                        .catch(error => {
+                            alert("系統忙碌中，請稍後再試！");
+                            unsubscribeBtn.disabled = false;
+                        });
+                };
+            </text>
+        }
+        else
+        {
+            <text>
+                const subscribeBtn = document.getElementById("SubscribeBtn");
+                subscribeBtn.onclick = () => {
+                    subscribeBtn.disabled = true;
+                    window.axios.get("@Url.Action("Subscribe")")
+                        .then(response => {
+                            window.location.href = response.data.redirectUrl;
+                        })
+                        .catch(error => {
+                            alert("系統忙碌中，請稍後再試！");
+                            subscribeBtn.disabled = false;
+                        });
+                };
+            </text>
+        }
+    </script>
+}
