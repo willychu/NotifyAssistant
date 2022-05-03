@@ -1,23 +1,25 @@
 ﻿using JWT.Algorithms;
 using JWT.Builder;
 using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using NotifyAssistant.Models.Config;
 using NotifyAssistant.Models.LineLogin;
 
 namespace NotifyAssistant.Models.Service
 {
     public class LineLoginService : ILineLoginService
     {
-        private readonly IConfiguration _config;
+        private readonly IOptions<LineLoginConfig> _options;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IHttpClientFactory _httpClientFactory;
 
         public LineLoginService(
-            IConfiguration config,
+            IOptions<LineLoginConfig> options,
             IHttpContextAccessor httpContextAccessor,
             IHttpClientFactory httpClientFactory)
         {
-            _config = config;
+            _options = options;
             _httpContextAccessor = httpContextAccessor;
             _httpClientFactory = httpClientFactory;
         }
@@ -27,13 +29,13 @@ namespace NotifyAssistant.Models.Service
             var builder = new QueryBuilder
             {
                 { "response_type", "code" },
-                { "client_id", _config["LineLogin:ClientId"] },
-                { "redirect_uri", $"{GetHost()}{_config["LineLogin:RedirectUri"]}" },
-                { "scope", _config["LineLogin:Scope"] },
+                { "client_id", _options.Value.ClientId },
+                { "redirect_uri", $"{GetHost()}{_options.Value.RedirectUri}" },
+                { "scope", _options.Value.Scope },
                 { "state", state }
             };
             
-            return $"{_config["LineLogin:AuthUrl"]}{builder.ToQueryString().Value}";
+            return $"{_options.Value.AuthUrl}{builder.ToQueryString().Value}";
         }
 
         public async Task<HttpResponseMessage> GetTokenAsync(string code)
@@ -42,20 +44,20 @@ namespace NotifyAssistant.Models.Service
             {
                 new KeyValuePair<string, string>("grant_type", "authorization_code"),
                 new KeyValuePair<string, string>("code", code),
-                new KeyValuePair<string, string>("redirect_uri", $"{GetHost()}{_config["LineLogin:RedirectUri"]}"),
-                new KeyValuePair<string, string>("client_id", _config["LineLogin:ClientId"]),
-                new KeyValuePair<string, string>("client_secret", _config["LineLogin:ClientSecret"])
+                new KeyValuePair<string, string>("redirect_uri", $"{GetHost()}{_options.Value.RedirectUri}"),
+                new KeyValuePair<string, string>("client_id", _options.Value.ClientId),
+                new KeyValuePair<string, string>("client_secret", _options.Value.ClientSecret)
             });
             
             var httpClient = _httpClientFactory.CreateClient();
-            return await httpClient.PostAsync(_config["LineLogin:TokenUrl"], content);
+            return await httpClient.PostAsync(_options.Value.TokenUrl, content);
         }
 
         public async Task<HttpResponseMessage> GetProfileAsync(string accessToken)
         {
             var httpClient = _httpClientFactory.CreateClient();
             httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
-            return await httpClient.PostAsync(_config["LineLogin:ProfileUrl"], null);
+            return await httpClient.PostAsync(_options.Value.ProfileUrl, null);
         }
 
         public async Task<HttpResponseMessage> GetVerifyAsync(string accessToken)
@@ -66,7 +68,7 @@ namespace NotifyAssistant.Models.Service
             };
             
             var httpClient = _httpClientFactory.CreateClient();
-            return await httpClient.GetAsync($"{_config["LineLogin:VerifyUrl"]}{builder.ToQueryString().Value}");
+            return await httpClient.GetAsync($"{_options.Value.VerifyUrl}{builder.ToQueryString().Value}");
         }
 
         public async Task<HttpResponseMessage> RevokeTokenAsync(string accessToken)
@@ -74,12 +76,12 @@ namespace NotifyAssistant.Models.Service
             var content = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
             {
                 new KeyValuePair<string, string>("access_token", accessToken),
-                new KeyValuePair<string, string>("client_id", _config["LineLogin:ClientId"]),
-                new KeyValuePair<string, string>("client_secret", _config["LineLogin:ClientSecret"])
+                new KeyValuePair<string, string>("client_id", _options.Value.ClientId),
+                new KeyValuePair<string, string>("client_secret", _options.Value.ClientSecret)
             });
             
             var httpClient = _httpClientFactory.CreateClient();
-            return await httpClient.PostAsync(_config["LineLogin:RevokeUrl"], content);
+            return await httpClient.PostAsync(_options.Value.RevokeUrl, content);
         }
 
         public async Task<T> ParseJsonResponseAsync<T>(HttpResponseMessage responseMessage)
@@ -92,7 +94,7 @@ namespace NotifyAssistant.Models.Service
         {
             var payloadJson = JwtBuilder.Create()
                 .WithAlgorithm(new HMACSHA256Algorithm())
-                .WithSecret(_config["LineLogin:ClientSecret"])
+                .WithSecret(_options.Value.ClientSecret)
                 .MustVerifySignature()
                 .Decode(idToken);
             

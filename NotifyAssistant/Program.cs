@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using NotifyAssistant.Models;
+using NotifyAssistant.Models.Config;
 using NotifyAssistant.Models.Entity;
 using NotifyAssistant.Models.Service;
 
@@ -22,6 +22,9 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession();
 
 builder.Services.AddDbContext<AssistantDbContext>(options => options.UseInMemoryDatabase("AssistantDB"));
+
+builder.Services.Configure<LineLoginConfig>(builder.Configuration.GetSection("LineLogin"));
+builder.Services.Configure<LineNotifyConfig>(builder.Configuration.GetSection("LineNotify"));
 
 builder.Services.AddScoped<IAssistantService, AssistantService>();
 builder.Services.AddScoped<ILineLoginService, LineLoginService>();
