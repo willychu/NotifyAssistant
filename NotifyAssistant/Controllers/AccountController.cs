@@ -105,7 +105,8 @@ namespace NotifyAssistant.Controllers
                     Role = "User",
                     LineUserId = profileData.UserId,
                     LineLoginAccessToken = tokenData.AccessToken,
-                    LineLoginIdToken = tokenData.IdToken
+                    LineLoginIdToken = tokenData.IdToken,
+                    LineLoginRefreshToken = tokenData.RefreshToken
                 };
                 
                 _db.Users.Add(user);
@@ -118,6 +119,7 @@ namespace NotifyAssistant.Controllers
                 user.AvatarUrl = profileData.PictureUrl;
                 user.LineLoginAccessToken = tokenData.AccessToken;
                 user.LineLoginIdToken = tokenData.IdToken;
+                user.LineLoginRefreshToken = tokenData.RefreshToken;
                 
                 await _db.SaveChangesAsync();
             }
@@ -148,6 +150,7 @@ namespace NotifyAssistant.Controllers
 
                         user.LineLoginAccessToken = null;
                         user.LineLoginIdToken = null;
+                        user.LineLoginRefreshToken = null;
                         await _db.SaveChangesAsync();
                     }
                 }

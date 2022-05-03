@@ -16,6 +16,8 @@ namespace NotifyAssistant.Models.Entity
 
         public string LineLoginIdToken { get; set; }
 
+        public string LineLoginRefreshToken { get; set; }
+
         public string LineNotifyAccessToken { get; set; }
     }
 }
