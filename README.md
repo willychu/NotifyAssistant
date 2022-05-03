@@ -2,7 +2,7 @@
 
 LINE Notify 推播通知服務
 
-# 功能
+## 功能
 
 * 實作使用者登入 (LINE Login)
 * 實作使用者訂閱通知功能 (LINE Notify) (取得 Access Token 並儲存)
